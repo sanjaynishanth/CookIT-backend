@@ -1,19 +1,23 @@
 const express = require("express");
-const connectDB = require("./config/db");
 const cors = require("cors");
 require("dotenv").config();
+const connectDB = require("./config/db");
 
 const app = express();
 
+// Correct CORS Middleware
+app.use(cors({
+    origin: ["http://localhost:5174", "https://cookit-82lj.onrender.com"], // Allow local & deployed frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true // Allow cookies/auth headers if needed
+}));
+
+// Handle Preflight Requests (OPTIONS)
+app.options("*", cors());
+
 // Middleware
 app.use(express.json());
-
-// Configure CORS
-app.use(cors({
-    origin: "*",  // Allow all origins (you can replace * with your frontend URL)
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type",
-}));
 
 // Database Connection
 connectDB();
